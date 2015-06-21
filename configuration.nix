@@ -50,29 +50,72 @@
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "eurosign:e";
 
+  # Login Manager.
+  services.xserver.displayManager.lightdm.enable = true;
+
   # XFCE.
   services.xserver.desktopManager.xfce.enable = true;
   services.udisks2.enable = true;
 
+  # Allow proprietary software, including browser plugins.
+  nixpkgs.config = {
+    allowUnfree = true;
+
+    firefox = {
+      enableGoogleTalkPlugin = true;
+      # enableAdobeFlash = true;
+    };
+
+    chromium = {
+      enablePepperFlash = true;
+      enablePepperPDF = true;
+    };
+  };
+
   # Installed software.
   environment.systemPackages = with pkgs; [
+    # Core.
+    lightdm
+    polkit_gnome
+    networkmanagerapplet
+
+    # XFCE visuals.
+    hicolor_icon_theme
+    gtk-engine-murrine
+    gdk_pixbuf
+    cairo
+    librsvg
+
+    # Development.
     git
     vim
-    atom
     gnome3.gnome_terminal
+    cloc
+
+    # Languages.
     coq
     ghc.ghc784
+    haskellPackages.cabalInstall
     clang
     python
     python3
     jdk
+
+    # Applications.
+    firefoxWrapper
     chromium
-    firefox
     gimp
     vlc
     gnome3.eog
     evince
-    networkmanagerapplet
+    transmission_gtk
+
+    # System.
+    gparted
+
+    # Misc.
+    gnupg
     wget
+    file
   ];
 }
